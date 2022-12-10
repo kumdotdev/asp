@@ -260,8 +260,8 @@ class AppShellPresenter extends LitElement {
         ${url
           ? html`<iframe src="${url}"></iframe>`
           : html`
-              <div>
-                <p>No url provided, yet!</p>
+              <div style="display:grid;place-content:center;height:100%">
+                <p>No Website URL provided!</p>
                 <button @click=${this._handleClickEdit}>Edit</button>
               </div>
             `}
