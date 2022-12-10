@@ -1,60 +1,82 @@
 import { html } from 'https://cdn.skypack.dev/lit@2.1.1?min';
 
-export const styles = html`
+export const appStyles = html`
   <style>
     :root {
-      --asp-text-color: #444;
-      --asp-button-color: var(--asp-text-color);
-      --asp-on-button-color: #eee;
-      --asp-background-color: gainsboro;
+      --asp-h: 0deg;
+      --asp-s: 0%;
+      --asp-l: 46%;
+      --asp-a: 1;
+      --asp-text-color: hsla(var(--asp-h), var(--asp-s), var(--asp-l), var(--asp-a));
+      --asp-background-color: hsla(var(--asp-h), var(--asp-s), 94%, var(--asp-a));
       --asp-header-height: 40px;
-      --asp-iframe-background-color: white;
+      --asp-iframe-background-color: var(--asp-background-color);
+      --asp-highlight-color: hsl(var(--asp-h), var(--asp-s), 6%);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --asp-text-color: #eee;
-        --asp-on-button-color: #555;
-        --asp-background-color: #222;
+        --asp-l: 64%;
+        --asp-background-color: hsla(var(--asp-h), var(--asp-s), 12%, var(--asp-a));
+        --asp-highlight-color: hsl(var(--asp-h), var(--asp-s), 99%);
       }
     }
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
     body {
+      color: var(--asp-text-color);
       background-color: var(--asp-background-color);
       display: grid;
-      height: 100vh;
       overflow: hidden;
       margin: 0;
-      font-family: Helvetica, sans-serif;
+      font-family: sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
     }
     body::backdrop {
       background-color: var(--asp-background-color);
+    }
+    button,
+    select,
+    textarea,
+    input {
+      font-family: inherit;
+      font-size: inherit;
+      color: var(--asp-text-color);
+      padding: 1rem 1.5rem;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      background-color: var(--asp-background-color);
+      accent-color: var(--asp-text-color);
     }
     h1 {
       font-size: 0.875rem;
       margin: 0;
       color: var(--asp-text-color);
-      padding: 0 1rem;
       font-weight: normal;
       text-transform: uppercase;
     }
     h1 span {
+      color: var(--asp-highlight-color);
       font-weight: bolder;
     }
     nav {
-      padding: 0 1rem;
       justify-self: end;
       display: flex;
     }
-    button {
-      border: 0;
-      color: var(--asp-on-button-color);
-      background-color: var(--asp-text-color);
-      border-radius: 4px;
+    header button {
+      font-size: 0.75rem;
       margin: 0.1rem;
       padding: 0.2rem 0.8rem;
-      min-width: 10ch;
+      border-color: transparent;
+      cursor: pointer;
     }
-    button[disabled] {
-      opacity: 0.5;
+    button[disabled],
+    button.active {
+      color: var(--asp-highlight-color);
     }
     app-shell-presenter {
       display: grid;
@@ -67,6 +89,7 @@ export const styles = html`
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
+      padding: 0 1rem;
     }
     main {
       justify-self: center;
@@ -75,6 +98,36 @@ export const styles = html`
       display: block;
       background-repeat: no-repeat;
       background-size: cover;
+    }
+    form {
+      display: grid;
+      gap: 1.5rem;
+      padding: 2rem;
+      min-width: 24rem;
+      background-color: hsla(var(--asp-h), var(--asp-s), var(--asp-l),.08);
+      border-radius: 12px;
+    }
+    input[type="url"] {
+      width: 100%;
+    }
+    input[type="url"]:focus {
+      outline: 1px solid currentColor;
+    }
+    label {
+      display: block;
+      margin-bottom: .5rem;
+    }
+    label[for^="checkbox-"] {
+      border: 1px solid hsla(var(--asp-h), var(--asp-s), var(--asp-l),.3);;
+      border-radius: 2px;
+      padding: .375rem 1.5rem;
+      background-color: var(--asp-background-color);
+    }
+    label[for^="checkbox-"]:has(input:checked) {
+      color: var(--asp-highlight-color);
+    }
+    label[for^="checkbox-"] input {
+      display: none;
     }
     iframe {
       border: 0;
