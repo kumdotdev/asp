@@ -1,7 +1,10 @@
 export const checkIsMobile = () =>
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
+  // read https://web.dev/migrate-to-ua-ch/
+  navigator.userAgentData
+    ? navigator.userAgentData.mobile
+    : /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
 
 export const capitalize = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
