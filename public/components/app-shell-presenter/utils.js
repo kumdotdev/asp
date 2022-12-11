@@ -29,8 +29,17 @@ export const fullscreen = (mode = true, element = 'body') =>
     : document.exitFullscreen();
 
 // https://stackoverflow.com/a/69574526
-export const swapIndex = (array, from, to) => (
-  from < to 
-    ? [...array.slice(0, from), ...array.slice(from + 1, to + 1), array[from], ...array.slice(to + 1)] 
-    : [...array.slice(0, to), array[from], ...array.slice(to, from), ...array.slice(from + 1)]
-);
+export const swapIndex = (array, from, to) =>
+  from < to
+    ? [
+        ...array.slice(0, from),
+        ...array.slice(from + 1, to + 1),
+        array[from],
+        ...array.slice(to + 1),
+      ]
+    : [
+        ...array.slice(0, to),
+        array[from],
+        ...array.slice(to, from),
+        ...array.slice(from + 1),
+      ];
