@@ -261,7 +261,9 @@ class AppShellPresenter extends LitElement {
           ? html`<iframe src="${url}"></iframe>`
           : html`
               <div style="display:grid;place-content:center;height:100%">
-                <p>No Website URL provided!</p>
+                <p style="color:var(--asp-highlight-color)">
+                  No Website URL provided!
+                </p>
                 <button @click=${this._handleClickEdit}>Edit</button>
               </div>
             `}
