@@ -157,6 +157,36 @@ export const tablet = html`
 export const mobile = html`
   <style>
     main {
+      width: 430px;
+      height: 884px;
+      background-image: url(mobile-portrait-390-notch@1x.svg);
+    }
+    iframe {
+      width: 390px;
+      height: 844px;
+      top: 20px;
+      left: 20px;
+      border-radius: 45px;
+      padding-top: 44px;
+      padding-bottom: 44px;
+    }
+    main:after {
+      /* Notch for Mobile */
+      content: '';
+      position: absolute;
+      width: 163px;
+      height: 30px;
+      left: 134px;
+      top: 20px;
+      background: #3E3D3D;
+      border-radius: 0px 0px 20px 20px;
+    }
+  </style>
+`;
+
+export const mobile_xs = html`
+  <style>
+    main {
       width: 370px;
       height: 748px;
       background-image: url(mobile-portrait@1x.svg);
