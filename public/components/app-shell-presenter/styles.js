@@ -140,13 +140,13 @@ export const appStyles = html`
 export const tablet = html`
   <style>
     main {
-      width: 930px;
-      height: 662px;
-      background-image: url(tablet-landscape@1x.svg);
+      width: 1162px;
+      height: 836px;
+      background-image: url(tablet-landscape-1024@1x.svg);
     }
     iframe {
-      width: 792px;
-      height: 594px;
+      width: 1024px;
+      height: 768px;
       top: 34px;
       left: 69px;
     }
