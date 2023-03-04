@@ -1,12 +1,13 @@
-Gestern Abend eine Idee direkt mal umgesetzt. Präsentationen von PoCs waren halt nicht so schön wie z.b. Screens angucken auf Invision. Habe eine Presenter-App gebaut, mit der man flexibel die Views und die Unterseiten steuern kann:
+# ASP App Shell Presenter
 
-Beispiel PB Dealer:
-https://k4330.com/asp/?path=pbdealer&device=Tablet,Mobile,Desktop
+A private experiment for testing Lit and play around with web components.
 
-oder der Steuerrechner nur Desktop und Tablet
-https://k4330.com/asp/?path=steuerrechner&device=Desktop,Tablet
+## What it does
 
-oder Impulse nur Mobile
-https://k4330.com/asp/?path=impulse&device=Mobile
+Presenting early webdev wireframes or app shells in a nice way for different devices. Settings state is kept in the URL, so You can send the URL around to show Your work. Pretty simple.
 
-und als Bonus: wenn man mit seinem Mobile den Links folgt, dann bekommt man immer die komplette Seite als reinen Pageview
+## Demo
+https://asp.kum.rocks
+
+## Links
+Lit https://lit.dev
