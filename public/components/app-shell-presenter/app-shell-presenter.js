@@ -4,9 +4,9 @@ import {
   nothing,
 } from 'https://cdn.skypack.dev/lit@2.1.1?min';
 import { capitalize, checkIsMobile, fullscreen, swapIndex } from './utils.js';
-import { appStyles, tablet, mobile, desktop, clean } from './styles.js';
+import { appStyles, tablet, mobile, mobile_xs, desktop, clean } from './styles.js';
 
-const AVAILABLE_DEVICES = ['tablet', 'mobile', 'desktop'];
+const AVAILABLE_DEVICES = ['mobile', 'tablet', 'desktop', 'mobile_xs'];
 
 const initialState = {
   availableDevices: AVAILABLE_DEVICES,
@@ -18,6 +18,7 @@ const initialState = {
     tablet: { ...tablet },
     mobile: { ...mobile },
     desktop: { ...desktop },
+    mobile_xs: { ...mobile_xs },
   },
   url: '',
 };
