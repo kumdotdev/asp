@@ -123,7 +123,7 @@ export const appStyles = html`
       padding: .375rem 1.5rem;
       background-color: var(--asp-background-color);
     }
-    label[for^="checkbox-"]:has(input:checked) {
+    input[type="checkbox"]:checked + span {
       color: var(--asp-highlight-color);
     }
     label[for^="checkbox-"] input {
