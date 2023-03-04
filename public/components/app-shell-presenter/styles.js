@@ -122,6 +122,7 @@ export const appStyles = html`
       border-radius: 2px;
       padding: .375rem 1.5rem;
       background-color: var(--asp-background-color);
+      cursor: move;
     }
     input[type="checkbox"]:checked + span {
       color: var(--asp-highlight-color);
