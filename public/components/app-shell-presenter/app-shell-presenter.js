@@ -10,6 +10,7 @@ const AVAILABLE_DEVICES = ['mobile', 'tablet', 'desktop', 'mobile_xs'];
 
 const initialState = {
   availableDevices: AVAILABLE_DEVICES,
+  backgroundcolor: '#333333',
   currentDevice: null,
   devices: [],
   edit: false,
@@ -37,6 +38,7 @@ class AppShellPresenter extends LitElement {
     super.connectedCallback();
     const { currentDevice } = this.state;
     const params = new URLSearchParams(document.location.search.substring(1));
+    const backgroundcolor = params.get('backgroundcolor') ?? '#333333';
     const url = params.get('url') ?? '';
     const devices = params.get('device')
       ? params
@@ -46,6 +48,7 @@ class AppShellPresenter extends LitElement {
       : [AVAILABLE_DEVICES[0]];
     this.setState({
       availableDevices: [...new Set([...devices, ...AVAILABLE_DEVICES])],
+      backgroundcolor,
       currentDevice: devices ? devices[0] : AVAILABLE_DEVICES[0],
       edit: !url,
       devices,
@@ -81,9 +84,11 @@ class AppShellPresenter extends LitElement {
     event.preventDefault();
     const { availableDevices, currentDevice } = this.state;
     const form = new FormData(event.target);
+    const backgroundcolor = form.get('backgroundcolor');
     const url = form.get('url');
     const devices = availableDevices.filter((item) => form.has(item));
     this.setState({
+      backgroundcolor,
       currentDevice: devices.includes(currentDevice)
         ? currentDevice
         : devices[0],
@@ -91,7 +96,7 @@ class AppShellPresenter extends LitElement {
       edit: !url.length,
       url,
     });
-    location.search = `url=${url}&device=${devices.join(',')}`;
+    location.search = `url=${url}&backgroundcolor=${backgroundcolor}&device=${devices.join(',')}`;
   }
 
   _handleDragStart(event) {
@@ -123,6 +128,10 @@ class AppShellPresenter extends LitElement {
     event.stopPropagation();
   }
 
+  _handleColorInput(event) {
+    this.setState({backgroundcolor: event.currentTarget.value})
+  }
+
   _handleDrop(event) {
     const { availableDevices } = this.state;
     const target = event.currentTarget;
@@ -137,7 +146,7 @@ class AppShellPresenter extends LitElement {
   }
 
   viewEditForm() {
-    const { availableDevices, devices, url } = this.state;
+    const { availableDevices, backgroundcolor, devices, url } = this.state;
     return html`
       <form @submit=${this._handleSubmit}>
         <div>
@@ -179,6 +188,16 @@ class AppShellPresenter extends LitElement {
               `,
             )}
           </span>
+        </div>
+        <div>
+          <label>Background Color</label>
+          <input
+            type="color"
+            name="backgroundcolor"
+            .value=${backgroundcolor}
+            style="background-color:${backgroundcolor}"
+            @input=${this._handleColorInput}
+          />
         </div>
         <div>
           <button type="submit">Activate Setting</button>
@@ -244,7 +263,7 @@ class AppShellPresenter extends LitElement {
   }
 
   render() {
-    const { currentDevice, edit, styles, url } = this.state;
+    const { backgroundcolor, currentDevice, edit, styles, url } = this.state;
 
     if (edit) {
       return html`
@@ -259,7 +278,7 @@ class AppShellPresenter extends LitElement {
       ${this.viewHeader()}
       <main>
         ${url
-          ? html`<iframe src="${url}"></iframe>`
+          ? html`<iframe style="background-color:${backgroundcolor}" src="${url}"></iframe>`
           : html`
               <div style="display:grid;place-content:center;height:100%">
                 <p style="color:var(--asp-highlight-color)">
