@@ -3,6 +3,7 @@ import {
   LitElement,
   nothing,
 } from 'https://cdn.skypack.dev/lit@2.1.1?min';
+import 'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/components/color-picker/color-picker.js';
 import { capitalize, checkIsMobile, fullscreen, swapIndex } from './utils.js';
 import { appStyles, tablet, mobile, mobile_xs, desktop, clean } from './styles.js';
 
@@ -191,13 +192,13 @@ class AppShellPresenter extends LitElement {
         </div>
         <div>
           <label>Background Color</label>
-          <input
-            type="color"
-            name="backgroundcolor"
-            .value=${backgroundcolor}
-            style="background-color:${backgroundcolor}"
-            @input=${this._handleColorInput}
-          />
+              <sl-color-picker
+                name="backgroundcolor"
+                .value=${backgroundcolor}
+                @sl-change=${this._handleColorInput}
+                label="Select a color"
+              >
+              </sl-color-picker>
         </div>
         <div>
           <button type="submit">Activate Setting</button>
