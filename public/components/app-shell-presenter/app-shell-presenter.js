@@ -5,16 +5,22 @@ import {
 } from 'https://cdn.skypack.dev/lit@2.1.1?min';
 import 'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/components/color-picker/color-picker.js';
 import { capitalize, checkIsMobile, fullscreen, swapIndex } from './utils.js';
-import { appStyles, tablet, mobile, mobile_xs, desktop, clean } from './styles.js';
+import {
+  appStyles,
+  tablet,
+  mobile,
+  mobile_xs,
+  desktop,
+  clean,
+} from './styles.js';
 
 const AVAILABLE_DEVICES = ['mobile', 'tablet', 'desktop', 'mobile_xs'];
 
 const initialState = {
   availableDevices: AVAILABLE_DEVICES,
-  backgroundcolor: '#333333',
   currentDevice: null,
   devices: [],
-  edit: false,
+  edit: true,
   // To-Do: use array methods to fill in styles
   styles: {
     tablet: { ...tablet },
@@ -22,7 +28,12 @@ const initialState = {
     desktop: { ...desktop },
     mobile_xs: { ...mobile_xs },
   },
-  url: '',
+  uiState: {
+    backgroundcolor: '#333333',
+    backgroundcolor_light: '#efefef',
+    devices: [],
+    url: '',
+  },
 };
 
 class AppShellPresenter extends LitElement {
@@ -32,29 +43,37 @@ class AppShellPresenter extends LitElement {
 
   constructor() {
     super();
-    this.setState(initialState);
+    //this.setState(initialState);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    const { currentDevice } = this.state;
-    const params = new URLSearchParams(document.location.search.substring(1));
+    const params = new URLSearchParams(document.location.search);
     const backgroundcolor = params.get('backgroundcolor') ?? '#333333';
     const url = params.get('url') ?? '';
-    const devices = params.get('device')
+    const devices = params.get('devices')
       ? params
-          .get('device')
+          .get('devices')
           .split(',')
           .map((device) => device.toLowerCase())
       : [AVAILABLE_DEVICES[0]];
-    this.setState({
-      availableDevices: [...new Set([...devices, ...AVAILABLE_DEVICES])],
-      backgroundcolor,
-      currentDevice: devices ? devices[0] : AVAILABLE_DEVICES[0],
-      edit: !url,
-      devices,
-      url,
-    });
+
+    this.state = { ...initialState };
+    console.log(this.state);
+    if (params.get('url')) {
+      this.state = {
+        ...this.state,
+        availableDevices: [...new Set([...devices, ...AVAILABLE_DEVICES])],
+        currentDevice: devices ? devices[0] : AVAILABLE_DEVICES[0],
+        edit: !url,
+        uiState: {
+          ...this.state.uiState,
+          backgroundcolor,
+          devices,
+          url,
+        },
+      };
+    }
   }
 
   createRenderRoot() {
@@ -66,6 +85,13 @@ class AppShellPresenter extends LitElement {
     if (location.hostname == 'localhost') {
       console.log('State ', this.state);
     }
+    history.replaceState(
+      null,
+      null,
+      `${location.pathname}?${new URLSearchParams(
+        this.state.uiState,
+      ).toString()}`,
+    );
   }
 
   _handleClick(event) {
@@ -83,21 +109,27 @@ class AppShellPresenter extends LitElement {
 
   async _handleSubmit(event) {
     event.preventDefault();
-    const { availableDevices, currentDevice } = this.state;
+    const { availableDevices } = this.state;
+    const { currentDevice } = this.state.uiState;
     const form = new FormData(event.target);
     const backgroundcolor = form.get('backgroundcolor');
     const url = form.get('url');
     const devices = availableDevices.filter((item) => form.has(item));
     this.setState({
-      backgroundcolor,
+      uiState: {
+        ...this.state.uiState,
+        backgroundcolor,
+        devices,
+        url,
+      },
       currentDevice: devices.includes(currentDevice)
         ? currentDevice
         : devices[0],
-      devices,
       edit: !url.length,
-      url,
     });
-    location.search = `url=${url}&backgroundcolor=${backgroundcolor}&device=${devices.join(',')}`;
+    // location.search = `url=${url}&backgroundcolor=${backgroundcolor}&device=${devices.join(
+    //   ',',
+    // )}`;
   }
 
   _handleDragStart(event) {
@@ -130,7 +162,12 @@ class AppShellPresenter extends LitElement {
   }
 
   _handleColorInput(event) {
-    this.setState({backgroundcolor: event.currentTarget.value})
+    this.setState({
+      uiState: {
+        ...this.state.uiState,
+        [event.target.name]: event.currentTarget.value,
+      },
+    });
   }
 
   _handleDrop(event) {
@@ -147,7 +184,9 @@ class AppShellPresenter extends LitElement {
   }
 
   viewEditForm() {
-    const { availableDevices, backgroundcolor, devices, url } = this.state;
+    const { availableDevices } = this.state;
+    const { backgroundcolor, backgroundcolor_light, devices, url } =
+      this.state.uiState;
     return html`
       <form @submit=${this._handleSubmit}>
         <div>
@@ -191,7 +230,10 @@ class AppShellPresenter extends LitElement {
           </span>
         </div>
         <div>
-          <label>Background Color</label>
+          <label>Mobile Background</label>
+          <div style="display:grid;grid-auto-flow:column">
+            <div>
+              <label>Dark Theme</label>
               <sl-color-picker
                 name="backgroundcolor"
                 .value=${backgroundcolor}
@@ -199,6 +241,18 @@ class AppShellPresenter extends LitElement {
                 label="Select a color"
               >
               </sl-color-picker>
+            </div>
+            <div>
+              <label>Light Theme</label>
+              <sl-color-picker
+                name="backgroundcolor_light"
+                .value=${backgroundcolor_light}
+                @sl-change=${this._handleColorInput}
+                label="Select a color"
+              >
+              </sl-color-picker>
+            </div>
+          </div>
         </div>
         <div>
           <button type="submit">Activate Setting</button>
@@ -208,7 +262,8 @@ class AppShellPresenter extends LitElement {
   }
 
   viewHeader() {
-    const { currentDevice, devices, edit } = this.state;
+    const { currentDevice, edit } = this.state;
+    const { devices } = this.state.uiState;
     return html`
       <header>
         <h1><span>App Shell</span> Presenter</h1>
@@ -264,7 +319,8 @@ class AppShellPresenter extends LitElement {
   }
 
   render() {
-    const { backgroundcolor, currentDevice, edit, styles, url } = this.state;
+    const { currentDevice, edit, styles } = this.state;
+    const { backgroundcolor, backgroundcolor_light, url } = this.state.uiState;
 
     if (edit) {
       return html`
@@ -275,11 +331,21 @@ class AppShellPresenter extends LitElement {
     // default view
     return html`
       ${appStyles}
+      <style>
+        iframe {
+          background-color: ${backgroundcolor};
+        }
+        @media (prefers-color-scheme: light) {
+          iframe {
+            background-color: ${backgroundcolor_light};
+          }
+        }
+      </style>
       ${currentDevice && !checkIsMobile() ? styles[currentDevice] : clean}
       ${this.viewHeader()}
       <main>
         ${url
-          ? html`<iframe style="background-color:${backgroundcolor}" src="${url}"></iframe>`
+          ? html`<iframe src="${url}"></iframe>`
           : html`
               <div style="display:grid;place-content:center;height:100%">
                 <p style="color:var(--asp-highlight-color)">
