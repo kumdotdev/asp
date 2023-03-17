@@ -50,6 +50,7 @@ class AppShellPresenter extends LitElement {
     super.connectedCallback();
     const params = new URLSearchParams(document.location.search);
     const backgroundcolor = params.get('backgroundcolor') ?? '#333333';
+    const backgroundcolor_light = params.get('backgroundcolor_light') ?? '#efefef';
     const url = params.get('url') ?? '';
     const devices = params.get('devices')
       ? params
@@ -69,6 +70,7 @@ class AppShellPresenter extends LitElement {
         uiState: {
           ...this.state.uiState,
           backgroundcolor,
+          backgroundcolor_light,
           devices,
           url,
         },
